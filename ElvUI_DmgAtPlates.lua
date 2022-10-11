@@ -670,7 +670,7 @@ function DAN:FilterEvent(...)
 		elseif mse[args3] and E.db.DmgAtPlates.pttdt  then
 			DAN:MissEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args10)
 		elseif  args3 == "SPELL_DISPEL" and E.db.DmgAtPlates.pttdt  then
-			DAN:DispelEvent(NP:SearchForFrame(args7,_,args8), args11, args4,args13)
+			DAN:DispelEvent(NP:SearchForFrame(args7,_,args8), args11, args4, args13)
 		elseif hse[args3] and E.db.DmgAtPlates.pttht  then
 			DAN:HealEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args16, args10,args14)
 		elseif csi[args3] and E.db.DmgAtPlates.pttdt then
@@ -686,7 +686,7 @@ function DAN:FilterEvent(...)
 		elseif mse[args3] and E.db.DmgAtPlates.ttpdt then
 			DAN:MissEvent(ElvUI_PDF, args11, args13, args10)
 		elseif  args3 == "SPELL_DISPEL" and E.db.DmgAtPlates.ttpdt then
-			DAN:DispelEvent(ElvUI_PDF, args11, args14, args13)
+			DAN:DispelEvent(ElvUI_PDF, args11, args4, args13)
 		elseif hse[args3] and E.db.DmgAtPlates.ttpht then
 			DAN:HealEvent(ElvUI_PDF, args11, args13, args16, args10,args14)
 		elseif csi[args3]  and E.db.DmgAtPlates.ttpdt then
