@@ -177,7 +177,7 @@ function DAN:GFS()
 		fontString = fontStringFrame:CreateFontString()
 		fontString:SetParent(fontStringFrame)
 	end
-	fontString:SetFont(DAN:GFP(E.db.DmgAtPlates.font),E.db.DmgAtPlates.fontSize,E.db.DmgAtPlates.fontOutline)
+	fontString:SetFont(DAN:GFP(self.db.font),self.db.fontSize,self.db.fontOutline)
 	fontString:SetShadowOffset(0, 0)
 
 	fontString:SetAlpha(1)
@@ -237,7 +237,7 @@ function DAN:RFS(fontString)
 
 	end
 
-	fontString:SetFont(DAN:GFP(E.db.DmgAtPlates.font),E.db.DmgAtPlates.fontSize,E.db.DmgAtPlates.fontOutline)
+	fontString:SetFont(DAN:GFP(self.db.font),self.db.fontSize,self.db.fontOutline)
 
 	fontString:SetShadowOffset(0, 0)
 
@@ -406,7 +406,7 @@ function DAN:DisplayText(f, text, size, alpha, animation, spellId, pow, spellNam
 	fontString:SetText(fontString.DANText)
 
 	fontString.DANFontSize = size
-	fontString:SetFont(DAN:GFP(E.db.DmgAtPlates.font),size,E.db.DmgAtPlates.fontOutline)
+	fontString:SetFont(DAN:GFP(self.db.font),size,self.db.fontOutline)
 
 	fontString:SetShadowOffset(0, 0)
 
@@ -423,7 +423,7 @@ function DAN:DisplayText(f, text, size, alpha, animation, spellId, pow, spellNam
 		texture = select(3, GetSpellInfo(spellName))
 	end
 
-	if texture and E.db.DmgAtPlates.showIcon then
+	if texture and self.db.showIcon then
 		icon = fontString.icon
 		icon:Show()
 		icon:SetTexture(texture)
@@ -456,30 +456,30 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId)
 	--------- animation
 	if (autoattack and crit) then
 		-- animation = "verticalUp"
-		animation = E.db.DmgAtPlates.tttckndcrt or "verticalUp"
+		animation = self.db.tttckndcrt or "verticalUp"
 		-- print(animation..568)
 		pow = true
 	elseif (autoattack) then
-		animation =  E.db.DmgAtPlates.tttck or "fountain"
+		animation =  self.db.tttck or "fountain"
 		-- print(animation..590)
 		pow = false
 	elseif (crit) then
-		animation = E.db.DmgAtPlates.crt or "fountain"
+		animation = self.db.crt or "fountain"
 		-- animation = "verticalUp"
 		-- print(animation..594)
 		pow = true
 	elseif (not autoattack and not crit) then
 		-- animation = "rainfall"
-		animation = E.db.DmgAtPlates.ntttckndcrt or "fountain"
+		animation = self.db.ntttckndcrt or "fountain"
 		-- print(animation..598)
 		pow = false
 	end
 	------ формат текста
-	if E.db.DmgAtPlates.textFormat == "kkk" then
+	if self.db.textFormat == "kkk" then
 		text = format("%.1fk", amount / 1000)
-	elseif E.db.DmgAtPlates.textFormat == "csep" then
+	elseif self.db.textFormat == "csep" then
 		text = DAN:CSEP(amount)
-	elseif E.db.DmgAtPlates.textFormat == "none" then
+	elseif self.db.textFormat == "none" then
 		text = amount
 	end
 	-- text = text .. "k"
@@ -494,16 +494,16 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId)
 
 	local isTarget = (UnitGUID("target") == f.guid)
 
-	if (E.db.DmgAtPlates.sfftrgt and not isTarget and pguid ~= f.guid) then
-		size = E.db.DmgAtPlates.sfftrgtSize or 20
-		alpha = E.db.DmgAtPlates.sfftrgtAlpha or 1
+	if (self.db.sfftrgt and not isTarget and pguid ~= f.guid) then
+		size = self.db.sfftrgtSize or 20
+		alpha = self.db.sfftrgtAlpha or 1
 		-- print(473)
 	else
-		size = E.db.DmgAtPlates.fontSize or 20
-		alpha = E.db.DmgAtPlates.fontAlpha or 1
+		size = self.db.fontSize or 20
+		alpha = self.db.fontAlpha or 1
 	end
 	--------------small hits
-	if (E.db.DmgAtPlates.smallHits or E.db.DmgAtPlates.smallHitsHide) then
+	if (self.db.smallHits or self.db.smallHitsHide) then
 		if (not lastDamageEventTime or (lastDamageEventTime + SMALL_HIT_EXPIRY_WINDOW < GetTime())) then
 			numDamageEvents = 0
 			runningAverageDamageEvents = 0
@@ -512,10 +512,10 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId)
 		numDamageEvents = numDamageEvents + 1
 		lastDamageEventTime = GetTime()
 		if ((not crit and amount < SMALL_HIT_MULTIPIER * runningAverageDamageEvents) or (crit and amount / 2 < SMALL_HIT_MULTIPIER * runningAverageDamageEvents)) then
-			if (E.db.DmgAtPlates.smallHitsHide) then
+			if (self.db.smallHitsHide) then
 				return
 			else
-				size = size * (E.db.DmgAtPlates.smallHitsScale or 1)
+				size = size * (self.db.smallHitsScale or 1)
 			end
 		end
 	end
@@ -532,34 +532,34 @@ function DAN:HealEvent(f, spllname, slldmg, healcrt, splld, vrhll)
 	local text, animation, pow, size, alpha, color
 	----------------------- animation
 	if healcrt then
-		animation = E.db.DmgAtPlates.hcrt or "verticalUp"
+		animation = self.db.hcrt or "verticalUp"
 	else
-		animation =  E.db.DmgAtPlates.nhcrt or "fountain"
+		animation =  self.db.nhcrt or "fountain"
 	end
 	------------color
-	color = E.db.DmgAtPlates.hlclr
+	color = self.db.hlclr
 	----------------- size
-	size = E.db.DmgAtPlates.fontSize or 20
+	size = self.db.fontSize or 20
 	---------------- alpha
 	alpha = 1
 	pow = false
 	------------- text
-	if E.db.DmgAtPlates.shwrhll and slldmg == vrhll then
-		if E.db.DmgAtPlates.textFormat == "kkk" then
+	if self.db.shwrhll and slldmg == vrhll then
+		if self.db.textFormat == "kkk" then
 			text = format("Перелечено: %.1fk", ( vrhll/ 1000))
-		elseif E.db.DmgAtPlates.textFormat == "csep" then
+		elseif self.db.textFormat == "csep" then
 			text = "Перелечено: "..DAN:CSEP((vrhll))
-		elseif E.db.DmgAtPlates.textFormat == "none" then
+		elseif self.db.textFormat == "none" then
 			text = "Перелечено: "..vrhll --------------------- for another thing
 		end
-	elseif not E.db.DmgAtPlates.shwrhll and slldmg == vrhll then
+	elseif not self.db.shwrhll and slldmg == vrhll then
 		return
-	elseif E.db.DmgAtPlates.shwrhll and slldmg ~= vrhll then
-		if E.db.DmgAtPlates.textFormat == "kkk" then
+	elseif self.db.shwrhll and slldmg ~= vrhll then
+		if self.db.textFormat == "kkk" then
 			text = format("%.1fk", ((slldmg) / 1000))
-		elseif E.db.DmgAtPlates.textFormat == "csep" then
+		elseif self.db.textFormat == "csep" then
 			text = DAN:CSEP((slldmg))
-		elseif E.db.DmgAtPlates.textFormat == "none" then
+		elseif self.db.textFormat == "none" then
 			text = slldmg --------------------- for another thing
 		end
 	else
@@ -577,7 +577,7 @@ function DAN:MissEvent(f, spellName, missType, spellId)
 	------------color
 	color = "ffff00"
 	----------------- size
-	size = E.db.DmgAtPlates.fontSize or 20
+	size = self.db.fontSize or 20
 	---------------- alpha
 	alpha = 1
 	pow = true
@@ -595,7 +595,7 @@ function DAN:MissEventPet(f, spellName, missType, spellId)
 	------------color
 	color = "ffff00"
 	----------------- size
-	size = E.db.DmgAtPlates.fontSize or 20
+	size = self.db.fontSize or 20
 	---------------- alpha
 	alpha = 1
 	pow = true
@@ -614,7 +614,7 @@ function DAN:DispelEvent(f, spellName, infodis, spellId)
 	------------color
 	color = "ffff00"
 	----------------- size
-	size = E.db.DmgAtPlates.fontSize or 20
+	size = self.db.fontSize or 20
 	---------------- alpha
 	alpha = 1
 	pow = false
@@ -634,7 +634,7 @@ function DAN:SpellInterruptEvent(f,  spllname, splld, intrspll)
 	------------color
 	color = "ffff00"
 	----------------- size
-	size = E.db.DmgAtPlates.fontSize or 20
+	size = self.db.fontSize or 20
 	---------------- alpha
 	alpha = 1
 	pow = true
@@ -654,7 +654,7 @@ end
 ------------------------------------------------------------------------------------------
 local BITMASK_PETS = COMBATLOG_OBJECT_TYPE_PET + COMBATLOG_OBJECT_TYPE_GUARDIAN
 function DAN:FilterEvent(...)
-	if not E.db.DmgAtPlates.onorof then return end
+	if not self.db.onorof then return end
 	-- print("rab")
 	local args1,args2,args3,args4,args5,args6,args7,args8,args9,args10,args11,args12,args13,args14,args15,args16,args17,args18,args19,args20 =...
 	-- local vnt1,tm2,sbvnt3,guidwhcst4,whcst5,flags6,tgtguid7,tgtcst8,_,splld10,spllname11,schl12,slldmg13,infodis14,intrspll15,healcrt16,_,_,crt19,_,_,_,_,_,_,_ = ...
@@ -662,46 +662,46 @@ function DAN:FilterEvent(...)
 	-- for k,v in pairs(args) do
 	-- 	print(k,v)
 	-- end
-	if (args4 == pguid and args7 ~= pguid) or (args4 ~= pguid and args7 ~= pguid and  E.db.DmgAtPlates.sfap) then
-		if dse[args3] and E.db.DmgAtPlates.pttdt then
+	if (args4 == pguid and args7 ~= pguid) or (args4 ~= pguid and args7 ~= pguid and  self.db.sfap) then
+		if dse[args3] and self.db.pttdt then
 			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args12, args19, args10)
-		elseif  args3 == "SWING_DAMAGE" and E.db.DmgAtPlates.pttdt  then
+		elseif  args3 == "SWING_DAMAGE" and self.db.pttdt  then
 			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, args10, 1, args19, 6603)
-		elseif mse[args3] and E.db.DmgAtPlates.pttdt  then
+		elseif mse[args3] and self.db.pttdt  then
 			DAN:MissEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args10)
-		elseif  args3 == "SPELL_DISPEL" and E.db.DmgAtPlates.pttdt  then
+		elseif  args3 == "SPELL_DISPEL" and self.db.pttdt  then
 			DAN:DispelEvent(NP:SearchForFrame(args7,_,args8), args11, args14, args13)
-		elseif hse[args3] and E.db.DmgAtPlates.pttht  then
+		elseif hse[args3] and self.db.pttht  then
 			DAN:HealEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args16, args10,args14)
-		elseif csi[args3] and E.db.DmgAtPlates.pttdt then
+		elseif csi[args3] and self.db.pttdt then
 			DAN:SpellInterruptEvent(NP:SearchForFrame(args7,_,args8), args11,args10,args14)
-		elseif args3 == "SWING_MISSED" and E.db.DmgAtPlates.pttdt then
+		elseif args3 == "SWING_MISSED" and self.db.pttdt then
 			DAN:MissEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, AutoAttack , 6603)
 		end
 	elseif args7 == pguid then
-		if dse[args3] and E.db.DmgAtPlates.ttpdt then
+		if dse[args3] and self.db.ttpdt then
 			DAN:DamageEvent(ElvUI_PDF, args11, args13, args12, args19, args10)
-		elseif  args3 == "SWING_DAMAGE" and E.db.DmgAtPlates.ttpdt then
+		elseif  args3 == "SWING_DAMAGE" and self.db.ttpdt then
 			DAN:DamageEvent(ElvUI_PDF, AutoAttack, args10, 1, args19, 6603)
-		elseif mse[args3] and E.db.DmgAtPlates.ttpdt then
+		elseif mse[args3] and self.db.ttpdt then
 			DAN:MissEvent(ElvUI_PDF, args11, args13, args10)
-		elseif  args3 == "SPELL_DISPEL" and E.db.DmgAtPlates.ttpdt then
+		elseif  args3 == "SPELL_DISPEL" and self.db.ttpdt then
 			DAN:DispelEvent(ElvUI_PDF, args11, args14, args13)
-		elseif hse[args3] and E.db.DmgAtPlates.ttpht then
+		elseif hse[args3] and self.db.ttpht then
 			DAN:HealEvent(ElvUI_PDF, args11, args13, args16, args10,args14)
-		elseif csi[args3]  and E.db.DmgAtPlates.ttpdt then
+		elseif csi[args3]  and self.db.ttpdt then
 			DAN:SpellInterruptEvent(frame, args11,args10,args14)
-		elseif args3 == "SWING_MISSED" and E.db.DmgAtPlates.ttpdt then
+		elseif args3 == "SWING_MISSED" and self.db.ttpdt then
 			DAN:MissEvent(ElvUI_PDF, AutoAttack, AutoAttack , 6603)
 		end
 	elseif bit.band(args6, BITMASK_PETS) > 0 and bit.band(args6, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0 then -- pet/guard events
-		if dse[args3] and E.db.DmgAtPlates.petttdt  then
+		if dse[args3] and self.db.petttdt  then
 			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, "pet", args19, args10)
-		elseif args3 == "SWING_DAMAGE" and E.db.DmgAtPlates.petttdt then
+		elseif args3 == "SWING_DAMAGE" and self.db.petttdt then
 			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttackPet, args10, "pet", args19, 315235)
-		elseif mse[args3] and E.db.DmgAtPlates.petttdt then
+		elseif mse[args3] and self.db.petttdt then
 			DAN:MissEventPet(NP:SearchForFrame(args7,_,args8), args11, args13, args10)
-		elseif hse[args3] and E.db.DmgAtPlates.petttht then
+		elseif hse[args3] and self.db.petttht then
 			DAN:HealEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args16, args10,args14)
 		end
 	end
@@ -722,6 +722,7 @@ end
 
 function DAN:Initialize()
 	EP:RegisterPlugin("ElvUI_DmgAtPlates", self.DmgAtPlatesOptions)
+	self.db = E.db.DmgAtPlates
 	self:RegisterEvent('PLAYER_ENTERING_WORLD')
 end
 
@@ -739,6 +740,7 @@ function DAN:OnDisable()
 end
 function DAN:OnEnable()
 	-- if E.db.DmgAtPlates.onorof then
+	
 	DAN.DmgTextFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	DAN.DmgTextFrame:SetScript("OnEvent",function(event,...)
 		DAN:FilterEvent(...)
