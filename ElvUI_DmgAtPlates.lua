@@ -448,9 +448,10 @@ end
 local numDamageEvents = 0
 local lastDamageEventTime
 local runningAverageDamageEvents = 0
+local text, animation, pow, size, alpha
 function DAN:DamageEvent(f, spellName, amount, school, crit, spellId)
 	if not f then return end
-	local text, animation, pow, size, alpha
+	
 	----- определение чего то спеллнейма
   	local autoattack = spellName == AutoAttack or spellName == AutoShot or spellName == "pet"
 	--------- animation
@@ -546,9 +547,9 @@ function DAN:HealEvent(f, spllname, slldmg, healcrt, splld, vrhll)
 	------------- text
 	if self.db.shwrhll and slldmg == vrhll then
 		if self.db.textFormat == "kkk" then
-			text = format("Перелечено: %.1fk", ( vrhll/ 1000))
+			text = format("Перелечено: %.1fk", vrhll / 1000)
 		elseif self.db.textFormat == "csep" then
-			text = "Перелечено: "..DAN:CSEP((vrhll))
+			text = "Перелечено: "..DAN:CSEP(vrhll)
 		elseif self.db.textFormat == "none" then
 			text = "Перелечено: "..vrhll --------------------- for another thing
 		end
@@ -653,10 +654,11 @@ end
 ------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 local BITMASK_PETS = COMBATLOG_OBJECT_TYPE_PET + COMBATLOG_OBJECT_TYPE_GUARDIAN
+local args1,args2,args3,args4,args5,args6,args7,args8,args9,args10,args11,args12,args13,args14,args15,args16,args17,args18,args19,args20
 function DAN:FilterEvent(...)
-	if not self.db.onorof then return end
+	if not self.db or not self.db.onorof then return end
 	-- print("rab")
-	local args1,args2,args3,args4,args5,args6,args7,args8,args9,args10,args11,args12,args13,args14,args15,args16,args17,args18,args19,args20 =...
+	args1,args2,args3,args4,args5,args6,args7,args8,args9,args10,args11,args12,args13,args14,args15,args16,args17,args18,args19,args20 =...
 	-- local vnt1,tm2,sbvnt3,guidwhcst4,whcst5,flags6,tgtguid7,tgtcst8,_,splld10,spllname11,schl12,slldmg13,infodis14,intrspll15,healcrt16,_,_,crt19,_,_,_,_,_,_,_ = ...
 	-- local args = {...}
 	-- for k,v in pairs(args) do
