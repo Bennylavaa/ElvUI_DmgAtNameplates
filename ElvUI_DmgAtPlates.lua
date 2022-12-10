@@ -449,7 +449,7 @@ local numDamageEvents = 0
 local lastDamageEventTime
 local runningAverageDamageEvents = 0
 local text, animation, pow, size, alpha
-function DAN:DamageEvent(f, spellName, amount, school, crit, spellId)
+function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, isPlayer,whoName)
 	if not f then return end
 	
 	----- определение чего то спеллнейма
@@ -486,11 +486,14 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId)
 	-- text = text .. "k"
 	------------------- красим текст в школу
 	if	(spellName == AutoAttack or spellName == AutoShot) and DAMAGE_TYPE_COLORS[spellName] then
-			text = "\124cff" .. DAMAGE_TYPE_COLORS[spellName] .. text .. "\124r"
+		text = "\124cff" .. DAMAGE_TYPE_COLORS[spellName] .. text .. "\124r"
 	elseif school and DAMAGE_TYPE_COLORS[school] then
 		text = "\124cff" .. DAMAGE_TYPE_COLORS[school] .. text .. "\124r"
 	else
 		text = "\124cff" .. "ffff00" .. text .. "\124r"
+	end
+	if not isPlayer and self.db.sfap and whoName then
+		text = whoName .."  ".. text
 	end
 
 	local isTarget = (UnitGUID("target") == f.guid)
@@ -655,6 +658,7 @@ end
 ------------------------------------------------------------------------------------------
 local BITMASK_PETS = COMBATLOG_OBJECT_TYPE_PET + COMBATLOG_OBJECT_TYPE_GUARDIAN
 local args1,args2,args3,args4,args5,args6,args7,args8,args9,args10,args11,args12,args13,args14,args15,args16,args17,args18,args19,args20
+local isPlayerEvent
 function DAN:FilterEvent(...)
 	if not self.db or not self.db.onorof then return end
 	-- print("rab")
@@ -664,11 +668,12 @@ function DAN:FilterEvent(...)
 	-- for k,v in pairs(args) do
 	-- 	print(k,v)
 	-- end
-	if (args4 == pguid and args7 ~= pguid) or (args4 ~= pguid and args7 ~= pguid and  self.db.sfap) then
+	isPlayerEvent = pguid == args4
+	if (args4 == pguid and args7 ~= pguid) or (args4 ~= pguid and args7 ~= pguid and self.db.sfap) then
 		if dse[args3] and self.db.pttdt then
-			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args12, args19, args10)
+			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args12, args19, args10, isPlayerEvent, args5)
 		elseif  args3 == "SWING_DAMAGE" and self.db.pttdt  then
-			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, args10, 1, args19, 6603)
+			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, args10, 1, args19, 6603, isPlayerEvent, args5)
 		elseif mse[args3] and self.db.pttdt  then
 			DAN:MissEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args10)
 		elseif  args3 == "SPELL_DISPEL" and self.db.pttdt  then
@@ -682,9 +687,9 @@ function DAN:FilterEvent(...)
 		end
 	elseif args7 == pguid then
 		if dse[args3] and self.db.ttpdt then
-			DAN:DamageEvent(ElvUI_PDF, args11, args13, args12, args19, args10)
+			DAN:DamageEvent(ElvUI_PDF, args11, args13, args12, args19, args10, isPlayerEvent, args5)
 		elseif  args3 == "SWING_DAMAGE" and self.db.ttpdt then
-			DAN:DamageEvent(ElvUI_PDF, AutoAttack, args10, 1, args19, 6603)
+			DAN:DamageEvent(ElvUI_PDF, AutoAttack, args10, 1, args19, 660, isPlayerEvent, args5)
 		elseif mse[args3] and self.db.ttpdt then
 			DAN:MissEvent(ElvUI_PDF, args11, args13, args10)
 		elseif  args3 == "SPELL_DISPEL" and self.db.ttpdt then
@@ -698,9 +703,9 @@ function DAN:FilterEvent(...)
 		end
 	elseif bit.band(args6, BITMASK_PETS) > 0 and bit.band(args6, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0 then -- pet/guard events
 		if dse[args3] and self.db.petttdt  then
-			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, "pet", args19, args10)
+			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, "pet", args19, args10, isPlayerEvent, args5)
 		elseif args3 == "SWING_DAMAGE" and self.db.petttdt then
-			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttackPet, args10, "pet", args19, 315235)
+			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttackPet, args10, "pet", args19, 315235, isPlayerEvent, args5)
 		elseif mse[args3] and self.db.petttdt then
 			DAN:MissEventPet(NP:SearchForFrame(args7,_,args8), args11, args13, args10)
 		elseif hse[args3] and self.db.petttht then
