@@ -162,9 +162,11 @@ function DAN:GFP(fontName)
 	return fontPath
 end
 
+local useRandomCoords = true
+
 local fontStringCache = {}
 local frameCounter = 0
-function DAN:GFS()
+function DAN:GFS(frame)
 	local fontString, fontStringFrame
 
 	if next(fontStringCache) then
@@ -193,6 +195,11 @@ function DAN:GFS()
 	fontString.icon:SetAlpha(1)
 	fontString.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
 	fontString.icon:Hide()
+	local x,y = frame:GetSize()
+	x = math.random(-(x/2),(x/2))
+	y = math.random(-(y/2),(y/2))
+	fontString.startX = useRandomCoords and x or 0
+	fontString.startY = useRandomCoords and y or 0
 
 		-- if fontString.icon.button then
 		-- 	fontString.icon.button:Show()
@@ -217,7 +224,8 @@ function DAN:RFS(fontString)
 	fontString.animatingDuration = nil
 	fontString.animatingStartTime = nil
 	fontString.anchorFrame = nil
-
+	fontString.startX = nil
+	fontString.startY = nil
 
 
 	fontString.pow = nil
@@ -344,7 +352,7 @@ local function AnimationOnUpdate()
 				end
 
 				if fontString.anchorFrame and fontString.anchorFrame:IsShown() then
-					fontString:SetPoint("CENTER", fontString.anchorFrame, "CENTER", 0 + xOffset, 0 + yOffset)
+					fontString:SetPoint("CENTER", fontString.anchorFrame, "CENTER", fontString.startX + xOffset, fontString.startY + yOffset)
 				else
 					DAN:RFS(fontString)
 				end
@@ -400,7 +408,7 @@ function DAN:DisplayText(f, text, size, alpha, animation, spellId, pow, spellNam
 	local fontString
 	local icon
 
-	fontString = DAN:GFS()
+	fontString = DAN:GFS(f)
 
 	fontString.DANText = text
 	fontString:SetText(fontString.DANText)
@@ -449,9 +457,9 @@ local numDamageEvents = 0
 local lastDamageEventTime
 local runningAverageDamageEvents = 0
 local text, animation, pow, size, alpha
-function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, isPlayer,whoName)
+function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, whog, whoName)
 	if not f then return end
-	
+
 	----- определение чего то спеллнейма
   	local autoattack = spellName == AutoAttack or spellName == AutoShot or spellName == "pet"
 	--------- animation
@@ -492,7 +500,7 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, isPlayer,w
 	else
 		text = "\124cff" .. "ffff00" .. text .. "\124r"
 	end
-	if not isPlayer and self.db.sfap and whoName then
+	if whog ~= pguid and self.db.sfap and whoName then
 		text = whoName .."  ".. text
 	end
 
@@ -671,9 +679,9 @@ function DAN:FilterEvent(...)
 	isPlayerEvent = pguid == args4
 	if (args4 == pguid and args7 ~= pguid) or (args4 ~= pguid and args7 ~= pguid and self.db.sfap) then
 		if dse[args3] and self.db.pttdt then
-			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args12, args19, args10, isPlayerEvent, args5)
+			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args12, args19, args10, args4, args5)
 		elseif  args3 == "SWING_DAMAGE" and self.db.pttdt  then
-			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, args10, 1, args19, 6603, isPlayerEvent, args5)
+			DAN:DamageEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, args10, 1, args19, 6603, args4, args5)
 		elseif mse[args3] and self.db.pttdt  then
 			DAN:MissEvent(NP:SearchForFrame(args7,_,args8), args11, args13, args10)
 		elseif  args3 == "SPELL_DISPEL" and self.db.pttdt  then
@@ -685,11 +693,11 @@ function DAN:FilterEvent(...)
 		elseif args3 == "SWING_MISSED" and self.db.pttdt then
 			DAN:MissEvent(NP:SearchForFrame(args7,_,args8), AutoAttack, AutoAttack , 6603)
 		end
-	elseif args7 == pguid then
+	elseif isPlayerEvent then
 		if dse[args3] and self.db.ttpdt then
-			DAN:DamageEvent(ElvUI_PDF, args11, args13, args12, args19, args10, isPlayerEvent, args5)
+			DAN:DamageEvent(ElvUI_PDF, args11, args13, args12, args19, args10, args4, args5)
 		elseif  args3 == "SWING_DAMAGE" and self.db.ttpdt then
-			DAN:DamageEvent(ElvUI_PDF, AutoAttack, args10, 1, args19, 660, isPlayerEvent, args5)
+			DAN:DamageEvent(ElvUI_PDF, AutoAttack, args10, 1, args19, 660, args4, args5)
 		elseif mse[args3] and self.db.ttpdt then
 			DAN:MissEvent(ElvUI_PDF, args11, args13, args10)
 		elseif  args3 == "SPELL_DISPEL" and self.db.ttpdt then
