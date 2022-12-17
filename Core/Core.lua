@@ -2,7 +2,7 @@
 local E, L, V, P, G, _ = unpack(ElvUI);
 local NP = E:GetModule('NamePlates');
 local EP = E.Libs.EP
-local DAN = E:NewModule('ElvUI_DmgAtPlates', 'AceTimer-3.0', 'AceHook-3.0', 'AceEvent-3.0')
+local DAN = E:GetModule('ElvUI_DmgAtPlates')
 local LibEasing = LibStub("LibEasing-1.0")
 local Loc = LibStub("AceLocale-3.0"):GetLocale("ElvUI_DmgAtPlates")
 local LSM = E.Libs.LSM
@@ -724,7 +724,7 @@ end
 
 function DAN:PLAYER_ENTERING_WORLD(...)
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	DAN:LoadCmmnOptions()
+	-- DAN:LoadCmmnOptions()
 	-- cleu = "COMBAT_LOG_EVENT_UNFILTERED"
 	-- ptc = "PLAYER_TARGET_CHANGED"
 	-- pn = GetUnitName("player")
@@ -755,7 +755,6 @@ function DAN:OnDisable()
 end
 function DAN:OnEnable()
 	-- if E.db.DmgAtPlates.onorof then
-	
 	DAN.DmgTextFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	DAN.DmgTextFrame:SetScript("OnEvent",function(event,...)
 		DAN:FilterEvent(...)

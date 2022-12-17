@@ -7,8 +7,10 @@
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
 
-Libs\Libs.xml
 
+Init.lua
+Libs\Libs.xml
 Locales\Locale.xml
-ElvUI_DmgAtPlates.lua
-Config\Config.lua
+Settings\Load_Config.xml
+Core\Core.lua
+
