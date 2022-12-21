@@ -2,7 +2,7 @@
 local E, L, V, P, G = unpack(ElvUI)
 local DAN = E:GetModule("ElvUI_DmgAtPlates")
 
-local Loc = LibStub("AceLocale-3.0"):GetLocale("ElvUI_DmgAtPlates")
+-- local L = LibStub("AceLocale-3.0"):GetLocale("ElvUI_DmgAtPlates")
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
@@ -57,11 +57,11 @@ local Loc = LibStub("AceLocale-3.0"):GetLocale("ElvUI_DmgAtPlates")
 
 
 local animationValues = {
-	["verticalUp"] = Loc["Vertical Up"],
-	["verticalDown"] = Loc["Vertical Down"],
-	["fountain"] = Loc["Fountain"],
-	["rainfall"] = Loc["Rainfall"],
-	["disabled"] = Loc["Disabled"]
+	["verticalUp"] = L["Vertical Up"],
+	["verticalDown"] = L["Vertical Down"],
+	["fountain"] = L["Fountain"],
+	["rainfall"] = L["Rainfall"],
+	["disabled"] = L["Disabled"]
 }
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
@@ -77,12 +77,12 @@ function DAN:DmgAtPlatesOptions()
 		order = 55,
 		type = "group",
 		childGroups = "tab",
-		name = string.format("|cff00FF00%s|r", "DmgAtPlates"),
+		name = string.format("|cff00FF00%s|r", "Всплывающий урон"),
 		args = {
 			common = {
 				order = 1,
 				type = "group",
-				name = Loc["common"],
+				name = L["common"],
 				get = function(info)  return E.db.DmgAtPlates[info[#info]] end,
 				set = function(info, value)
 					E.db.DmgAtPlates[info[#info]] = value
@@ -91,13 +91,13 @@ function DAN:DmgAtPlatesOptions()
 					header = {
 						order = 1,
 						type = "header",
-						name = Loc["commondesc"]
+						name = L["commondesc"]
 					},
 					onorof = {
 						order = 2,
 						type = "toggle",
-						name = Loc["onorof"],
-						desc = Loc["onorofdesc"],
+						name = L["onorof"],
+						desc = L["onorofdesc"],
 						get = function(info) return E.db.DmgAtPlates.onorof end,
 						set = function(info, value)
 							E.db.DmgAtPlates.onorof = value
@@ -111,8 +111,8 @@ function DAN:DmgAtPlatesOptions()
 					showIcon = {
 						order = 3,
 						type = "toggle",
-						name = Loc["sicon"],
-						desc = Loc["sicon"],
+						name = L["sicon"],
+						desc = L["sicon"],
 						get = function(info) return E.db.DmgAtPlates.showIcon end,
 						set = function(info, value)
 							E.db.DmgAtPlates.showIcon = value
@@ -121,8 +121,8 @@ function DAN:DmgAtPlatesOptions()
 					sfap = {
 						order = 4,
 						type = "toggle",
-						name = Loc["sfap"],
-						desc = Loc["sfap"],
+						name = L["sfap"],
+						desc = L["sfap"],
 						get = function(info) return E.db.DmgAtPlates.sfap end,
 						set = function(info, value)
 							E.db.DmgAtPlates.sfap = value
@@ -141,7 +141,7 @@ function DAN:DmgAtPlatesOptions()
 					font = {
 						order = 7,
 						type = "select",
-						name = Loc["font"],
+						name = L["font"],
 						dialogControl = "LSM30_Font",
 						values = AceGUIWidgetLSMlists.font,
 						get = function()
@@ -154,13 +154,13 @@ function DAN:DmgAtPlatesOptions()
 					fontSize = {
 						order = 8,
 						type = "range",
-						name = Loc["fntsize"],
+						name = L["fntsize"],
 						min = 5, max = 72, step = 1,
 					},
 					fontAlpha = {
 						order = 9,
 						type = "range",
-						name = Loc["otfAlpha"],
+						name = L["otfAlpha"],
 						min = 0.1,
 						max = 1,
 						step = .01,
@@ -168,7 +168,7 @@ function DAN:DmgAtPlatesOptions()
 					fontOutline = {
 						order = 10,
 						type = "select",
-						name = Loc["Font Outline"],
+						name = L["Font Outline"],
 						values = {
 							["NONE"] = L["NONE"],
 							["OUTLINE"] = "OUTLINE",
@@ -179,12 +179,12 @@ function DAN:DmgAtPlatesOptions()
 					header2 = {
 						order = 11,
 						type = "header",
-						name = Loc["offtarget"]
+						name = L["offtarget"]
 					},
 					sfftrgt = {
 						order = 12,
 						type = "toggle",
-						name = Loc["offtarget"],
+						name = L["offtarget"],
 						desc = "",
 						get = function()
 							return E.db.DmgAtPlates.sfftrgt
@@ -196,7 +196,7 @@ function DAN:DmgAtPlatesOptions()
 					sfftrgtSize = {
 						order = 13,
 						type = "range",
-						name = Loc["otfSize"],
+						name = L["otfSize"],
 						desc = "",
 						min = 5,
 						max = 72,
@@ -214,7 +214,7 @@ function DAN:DmgAtPlatesOptions()
 					sfftrgtAlpha = {
 						order = 14,
 						type = "range",
-						name = Loc["otfAlpha"],
+						name = L["otfAlpha"],
 						desc = "",
 						min = 0.1,
 						max = 1,
@@ -232,13 +232,13 @@ function DAN:DmgAtPlatesOptions()
 					header3 = {
 						order = 15,
 						type = "header",
-						name = Loc["SmallHits"]
+						name = L["SmallHits"]
 					},
 					smallHits = {
 						type = "toggle",
 						order = 16,
-						name = Loc["SmallHits"],
-						desc = Loc["SmallHitsdesc"],
+						name = L["SmallHits"],
+						desc = L["SmallHitsdesc"],
 						disabled = function()
 							return not E.db.DmgAtPlates.onorof or E.db.DmgAtPlates.smallHitsHide
 						end,
@@ -252,7 +252,7 @@ function DAN:DmgAtPlatesOptions()
 					smallHitsScale = {
 						order = 17,
 						type = "range",
-						name = Loc["SmallHitsScale"],
+						name = L["SmallHitsScale"],
 						desc = "",
 						disabled = function()
 							return not E.db.DmgAtPlates.onorof or not E.db.DmgAtPlates.smallHits or E.db.DmgAtPlates.smallHitsHide
@@ -271,8 +271,8 @@ function DAN:DmgAtPlatesOptions()
 					smallHitsHide = {
 						order = 18,
 						type = "toggle",
-						name = Loc["SmallHitsHide"],
-						desc = Loc["SmallHitsHidedesc"],
+						name = L["SmallHitsHide"],
+						desc = L["SmallHitsHidedesc"],
 						get = function()
 							return E.db.DmgAtPlates.smallHitsHide
 						end,
@@ -283,11 +283,11 @@ function DAN:DmgAtPlatesOptions()
 					textFormat = {
 						order = 19,
 						type = "select",
-						name = Loc["textformat"],
+						name = L["textformat"],
 						values = {
-							["none"] = Loc["none"],
-							["csep"] = Loc["csep"],
-							["kkk"] = Loc["kkk"],
+							["none"] = L["none"],
+							["csep"] = L["csep"],
+							["kkk"] = L["kkk"],
 						},
 						get = function()
 							return E.db.DmgAtPlates.textFormat
@@ -301,7 +301,7 @@ function DAN:DmgAtPlatesOptions()
             pttdttab = {
 				order = 2,
 				type = "group",
-				name = Loc["dt"],
+				name = L["dt"],
 				get = function(info)  return E.db.DmgAtPlates[info[#info]] end,
 				set = function(info, value)
 					E.db.DmgAtPlates[info[#info]] = value
@@ -310,13 +310,13 @@ function DAN:DmgAtPlatesOptions()
 					header = {
 						order = 1,
 						type = "header",
-						name = Loc["pttdt"]
+						name = L["pttdt"]
 					},
 					pttdt = {
 						order = 2,
 						type = "toggle",
-						name = Loc["pttdt"],
-						desc = Loc["pttdtdesc"],
+						name = L["pttdt"],
+						desc = L["pttdtdesc"],
 						get = function(info) return E.db.DmgAtPlates.pttdt end,
 						set = function(info, value)
 							E.db.DmgAtPlates.pttdt = value
@@ -325,8 +325,8 @@ function DAN:DmgAtPlatesOptions()
 					ttpdt = {
 						order = 3,
 						type = "toggle",
-						name = Loc["ttpdt"],
-						desc = Loc["ttpdtdesc"],
+						name = L["ttpdt"],
+						desc = L["ttpdtdesc"],
 						get = function(info) return E.db.DmgAtPlates.ttpdt end,
 						set = function(info, value)
 							E.db.DmgAtPlates.ttpdt = value
@@ -335,8 +335,8 @@ function DAN:DmgAtPlatesOptions()
 					petttdt = {
 						order = 4,
 						type = "toggle",
-						name = Loc["petttdt"],
-						desc = Loc["petttdtdesc"],
+						name = L["petttdt"],
+						desc = L["petttdtdesc"],
 						get = function(info) return E.db.DmgAtPlates.petttdt end,
 						set = function(info, value)
 							E.db.DmgAtPlates.petttdt = value
@@ -345,13 +345,13 @@ function DAN:DmgAtPlatesOptions()
 					header2 = {
 						order = 5,
 						type = "header",
-						name = Loc["AnimationDmg"]
+						name = L["AnimationDmg"]
 					},
 					tttckndcrt = {
 						order = 6,
 						type = "select",
-						name = Loc["tttckndcrt"],
-						desc = Loc["tttckndcrt"],
+						name = L["tttckndcrt"],
+						desc = L["tttckndcrt"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtPlates.tttckndcrt end,
 						set = function(info, value)
@@ -361,8 +361,8 @@ function DAN:DmgAtPlatesOptions()
 					tttck = {
 						order = 7,
 						type = "select",
-						name = Loc["tttck"],
-						desc = Loc["tttck"],
+						name = L["tttck"],
+						desc = L["tttck"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtPlates.tttck end,
 						set = function(info, value)
@@ -372,8 +372,8 @@ function DAN:DmgAtPlatesOptions()
 					crt = {
 						order = 8,
 						type = "select",
-						name = Loc["crt"],
-						desc = Loc["crt"],
+						name = L["crt"],
+						desc = L["crt"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtPlates.crt end,
 						set = function(info, value)
@@ -383,8 +383,8 @@ function DAN:DmgAtPlatesOptions()
 					ntttckndcrt = {
 						order = 9,
 						type = "select",
-						name = Loc["ntttckndcrt"],
-						desc = Loc["ntttckndcrt"],
+						name = L["ntttckndcrt"],
+						desc = L["ntttckndcrt"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtPlates.ntttckndcrt end,
 						set = function(info, value)
@@ -396,7 +396,7 @@ function DAN:DmgAtPlatesOptions()
             ptthttab = {
 				order = 3,
 				type = "group",
-				name = Loc["ht"],
+				name = L["ht"],
 				get = function(info)  return E.db.DmgAtPlates[info[#info]] end,
 				set = function(info, value)
 					E.db.DmgAtPlates[info[#info]] = value
@@ -405,13 +405,13 @@ function DAN:DmgAtPlatesOptions()
 					header = {
 						order = 1,
 						type = "header",
-						name = Loc["pttht"]
+						name = L["pttht"]
 					},
 					pttht = {
 						order = 2,
 						type = "toggle",
-						name = Loc["pttht"],
-						desc = Loc["ptthtdesc"],
+						name = L["pttht"],
+						desc = L["ptthtdesc"],
 						get = function(info) return E.db.DmgAtPlates.pttht end,
 						set = function(info, value)
 							E.db.DmgAtPlates.pttht = value
@@ -420,8 +420,8 @@ function DAN:DmgAtPlatesOptions()
 					ttpht = {
 						order = 3,
 						type = "toggle",
-						name = Loc["ttpht"],
-						desc = Loc["ttphtdesc"],
+						name = L["ttpht"],
+						desc = L["ttphtdesc"],
 						get = function(info) return E.db.DmgAtPlates.ttpht end,
 						set = function(info, value)
 							E.db.DmgAtPlates.ttpht = value
@@ -430,8 +430,8 @@ function DAN:DmgAtPlatesOptions()
 					petttht = {
 						order = 4,
 						type = "toggle",
-						name = Loc["petttht"],
-						desc = Loc["pettthtdesc"],
+						name = L["petttht"],
+						desc = L["pettthtdesc"],
 						get = function(info) return E.db.DmgAtPlates.petttht end,
 						set = function(info, value)
 							E.db.DmgAtPlates.petttht = value
@@ -440,8 +440,8 @@ function DAN:DmgAtPlatesOptions()
 					shwrhll = {
 						order = 5,
 						type = "toggle",
-						name = Loc["shwrhll"],
-						desc = Loc["shwrhlldesc"],
+						name = L["shwrhll"],
+						desc = L["shwrhlldesc"],
 						get = function(info) return E.db.DmgAtPlates.shwrhll end,
 						set = function(info, value)
 							E.db.DmgAtPlates.shwrhll = value
@@ -450,13 +450,13 @@ function DAN:DmgAtPlatesOptions()
 					header2 = {
 						order = 6,
 						type = "header",
-						name = Loc["AnimationHeal"]
+						name = L["AnimationHeal"]
 					},
 					hcrt = {
 						order = 7,
 						type = "select",
-						name = Loc["crt"],
-						desc = Loc["crt"],
+						name = L["crt"],
+						desc = L["crt"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtPlates.hcrt end,
 						set = function(info, value)
@@ -466,8 +466,8 @@ function DAN:DmgAtPlatesOptions()
 					nhcrt = {
 						order = 8,
 						type = "select",
-						name = Loc["nhcrt"],
-						desc = Loc["nhcrt"],
+						name = L["nhcrt"],
+						desc = L["nhcrt"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtPlates.nhcrt end,
 						set = function(info, value)
@@ -477,7 +477,7 @@ function DAN:DmgAtPlatesOptions()
 					hlclr = {
 						order = 9,
 						type = "color",
-						name = Loc["healColor"],
+						name = L["healColor"],
 						desc = "",
 						hasAlpha = false,
 						set = function(_, r, g, b)

@@ -4,7 +4,7 @@ local NP = E:GetModule('NamePlates');
 local EP = E.Libs.EP
 local DAN = E:GetModule('ElvUI_DmgAtPlates')
 local LibEasing = LibStub("LibEasing-1.0")
-local Loc = LibStub("AceLocale-3.0"):GetLocale("ElvUI_DmgAtPlates")
+-- local L = LibStub("AceLocale-3.0"):GetLocale("ElvUI_DmgAtPlates")
 local LSM = E.Libs.LSM
 
 -------------------------------------------------dmg text frame
@@ -88,8 +88,8 @@ local MISS_EVENT_STRINGS = {
 	["IMMUNE"] = ACTION_SPELL_MISSED_IMMUN,
 	["MISS"] = ACTION_SPELL_MISSED_MISS,
 	["PARRY"] = ACTION_SPELL_MISSED_PARRY,
-	["REFLECT"] = Loc["Reflected"],
-	["RESIST"] = Loc["Resisted"]
+	["REFLECT"] = L["Reflected"],
+	["RESIST"] = L["Resisted"]
 }
 
 function DAN:rgbToHex(r, g, b)
