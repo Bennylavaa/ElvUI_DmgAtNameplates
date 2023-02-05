@@ -735,11 +735,10 @@ function DAN:PLAYER_ENTERING_WORLD(...)
 	end)
 end
 
-function DAN:Initialize()
-	EP:RegisterPlugin("ElvUI_DmgAtPlates", self.DmgAtPlatesOptions)
-	self.db = E.db.DmgAtPlates
-	self:RegisterEvent('PLAYER_ENTERING_WORLD')
-end
+-- function DAN:Initialize()
+-- 	self.db = E.db.DmgAtPlates
+-- 	self:RegisterEvent('PLAYER_ENTERING_WORLD')
+-- end
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
@@ -761,7 +760,15 @@ function DAN:OnEnable()
 	end)
 end
 
-E:RegisterModule(DAN:GetName())
 
+function DAN:Initialize()
+	EP:RegisterPlugin("ElvUI_DmgAtPlates", self.DmgAtPlatesOptions)
+	self.db = E.db.DmgAtPlates
+	self:RegisterEvent('PLAYER_ENTERING_WORLD')
+end
 
+local function InitializeCallback()
+	DAN:Initialize()
+end
 
+E:RegisterModule("ElvUI_DmgAtPlates", InitializeCallback)

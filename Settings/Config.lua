@@ -73,6 +73,7 @@ local animationValues = {
 
 
 function DAN:DmgAtPlatesOptions()
+	DAN.db = E.db.DmgAtPlates or P.DmgAtPlates
 	E.Options.args.DmgAtPlates = {
 		order = 55,
 		type = "group",
