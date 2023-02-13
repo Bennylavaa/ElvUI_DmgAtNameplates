@@ -47,12 +47,12 @@ DAN.DmgTextFrame = CreateFrame("Frame", nil, UIParent)
 -------------------------------------------------player events frame
 DAN.ElvUI_ToPlayerFrame = CreateFrame("Frame","ElvUI_ToPlayerFrame", UIParent)
 DAN.ElvUI_ToPlayerFrame:SetPoint("CENTER",UIParent,"CENTER",300,0)
-DAN.ElvUI_ToPlayerFrame:SetSize(100,32)
+DAN.ElvUI_ToPlayerFrame:SetSize(300,32)
 DAN.ElvUI_ToPlayerFrame:Show()
 
 DAN.ElvUI_ToTargetFrame = CreateFrame("Frame","ElvUI_ToTargetFrame", UIParent)
 DAN.ElvUI_ToTargetFrame:SetPoint("CENTER",UIParent,"CENTER",-300,0)
-DAN.ElvUI_ToTargetFrame:SetSize(100,32)
+DAN.ElvUI_ToTargetFrame:SetSize(300,32)
 DAN.ElvUI_ToTargetFrame:Show()
 
 local inversePositions = {
