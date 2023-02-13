@@ -425,8 +425,7 @@ function DAN:DisplayText(f, text, size, alpha, animation, spellId, pow, spellNam
 			fontString.icon:Hide()
 		end
 	end
-	-- print(457)
-	self:Animate(fontString, f, 1, animation)
+	self:Animate(fontString, f, self.db.duration, animation)
 end
 
 local numDamageEvents = 0
@@ -601,7 +600,7 @@ local BITMASK_PETS = COMBATLOG_OBJECT_TYPE_PET + COMBATLOG_OBJECT_TYPE_GUARDIAN
 -- local args1,args2,subevent,whoguid,whoname,whoflag,tguid,tname,tflag,spellid,spellname,spellschool,amount,overHeal_Kill,args15,args16,args17,args18,dmgCrit,args20
 
 function DAN:FilterEvent(args1,args2,subevent,whoguid,whoname,whoflag,tguid,tname,tflag,spellid,spellname,spellschool,amount,overHeal_Kill,args15,args16,args17,args18,dmgCrit)
-	if not self.db or not self.db.onorof then return end
+	if not self.db or not self.db.enable then return end
 	-- print("rab")
 	-- args1,args2,subevent,whoguid,whoname,whoflag,tguid,tname,tflag,spellid,spellname,spellschool,amount,overHeal_Kill,args15,args16,args17,args18,dmgCrit,args20 =...
 	-- local vnt1,tm2,sbvnt3,guidwhcst4,whcst5,flags6,tgtguid7,tgtcst8,_,splld10,spllname11,schl12,slldmg13,infodis14,intrspll15,healcrt16,_,_,crt19,_,_,_,_,_,_,_ = ...

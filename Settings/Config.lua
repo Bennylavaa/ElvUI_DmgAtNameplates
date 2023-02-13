@@ -77,15 +77,15 @@ function DAN:DmgAtNameplatesOptions()
 						type = "header",
 						name = L["commondesc"]
 					},
-					onorof = {
+					enable = {
 						order = 2,
 						type = "toggle",
 						name = L["onorof"],
 						desc = L["onorofdesc"],
-						get = function(info) return E.db.DmgAtNameplates.onorof end,
+						get = function(info) return E.db.DmgAtNameplates.enable end,
 						set = function(info, value)
-							E.db.DmgAtNameplates.onorof = value
-							if not E.db.DmgAtNameplates.onorof then
+							E.db.DmgAtNameplates.enable = value
+							if not E.db.DmgAtNameplates.enable then
 								DAN:OnDisable()
 							else
 								DAN:OnEnable()
@@ -112,10 +112,11 @@ function DAN:DmgAtNameplatesOptions()
 							E.db.DmgAtNameplates.showFromAnotherPlayer = value
 						end
 					},
-					spacer1 = {
+					duration = {
 						order = 5,
-						type = "description",
-						name = " "
+						type = "range",
+						name = L["Duration of all animations"],
+						min = 1, max = 20, step = 1,
 					},
 					spacer2 = {
 						order = 6,
@@ -224,7 +225,7 @@ function DAN:DmgAtNameplatesOptions()
 						name = L["SmallHits"],
 						desc = L["SmallHitsdesc"],
 						disabled = function()
-							return not E.db.DmgAtNameplates.onorof or E.db.DmgAtNameplates.smallHitsHide
+							return not E.db.DmgAtNameplates.enable or E.db.DmgAtNameplates.smallHitsHide
 						end,
 						get = function()
 							return E.db.DmgAtNameplates.smallHits
@@ -239,7 +240,7 @@ function DAN:DmgAtNameplatesOptions()
 						name = L["SmallHitsScale"],
 						desc = "",
 						disabled = function()
-							return not E.db.DmgAtNameplates.onorof or not E.db.DmgAtNameplates.smallHits or E.db.DmgAtNameplates.smallHitsHide
+							return not E.db.DmgAtNameplates.enable or not E.db.DmgAtNameplates.smallHits or E.db.DmgAtNameplates.smallHitsHide
 						end,
 						min = 0.33,
 						max = 1,

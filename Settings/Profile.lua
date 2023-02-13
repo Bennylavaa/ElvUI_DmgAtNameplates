@@ -13,8 +13,9 @@ end
 
 
 P.DmgAtNameplates = {
-    onorof = false,
+    enable = false,
     showIcon = false,
+    duration = 1,
     font = "PT Sans Narrow",
     fontSize = 20,
     fontAlpha = 1,
