@@ -116,7 +116,7 @@ function DAN:DmgAtNameplatesOptions()
 						order = 5,
 						type = "range",
 						name = L["Duration of all animations"],
-						min = 1, max = 20, step = 1,
+						min = 0.1, max = 10, step = 0.1,
 					},
 					spacer2 = {
 						order = 6,
