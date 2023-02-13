@@ -6,26 +6,14 @@ local DAN = E:GetModule('DmgAtNameplates')
 local LibEasing = LibStub("LibEasing-1.0")
 local LSM = E.Libs.LSM
 
--------------------------------------------------dmg text frame
-DAN.DmgTextFrame = CreateFrame("Frame", nil, UIParent)
--------------------------------------------------player events frame
-DAN.ElvUI_PDFrame = CreateFrame("Frame","ElvUI_PDF",UIParent)
-DAN.ElvUI_PDFrame:SetPoint("CENTER",UIParent,"CENTER",0,-100)
-DAN.ElvUI_PDFrame:SetSize(32,32)
-DAN.ElvUI_PDFrame:Show()
-------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------
--------------------------------------DmgAtNameplates all functions and const
-------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------
-
 local CreateFrame = CreateFrame
 local mtfl, mtpw, mtrn = math.floor, math.pow, math.random
 local tostring, tonumber = tostring, tonumber
 local format, find = string.format, string.find
 local next, select, pairs, ipairs = next, select, pairs, ipairs
 local tinsert, tremove = table.insert, table.remove
-
+local UnitExists = UnitExists
+local UnitGUID = UnitGUID
 
 local SMALL_HIT_EXPIRY_WINDOW = 30
 local SMALL_HIT_MULTIPIER = 0.5
@@ -49,7 +37,23 @@ local AutoAttack = select(1, GetSpellInfo(6603))
 local AutoAttackPet = select(1, GetSpellInfo(315235))
 
 local AutoShot = select(1, GetSpellInfo(75))
+local isPlayerEvent
+local isTargetEvent
+local isPetEvent
+local unitToUnitEvent
+local playerToUnitEvent
+local unitToPlayerEvent
+DAN.DmgTextFrame = CreateFrame("Frame", nil, UIParent)
+-------------------------------------------------player events frame
+DAN.ElvUI_ToPlayerFrame = CreateFrame("Frame","ElvUI_ToPlayerFrame", UIParent)
+DAN.ElvUI_ToPlayerFrame:SetPoint("CENTER",UIParent,"CENTER",300,0)
+DAN.ElvUI_ToPlayerFrame:SetSize(100,32)
+DAN.ElvUI_ToPlayerFrame:Show()
 
+DAN.ElvUI_ToTargetFrame = CreateFrame("Frame","ElvUI_ToTargetFrame", UIParent)
+DAN.ElvUI_ToTargetFrame:SetPoint("CENTER",UIParent,"CENTER",-300,0)
+DAN.ElvUI_ToTargetFrame:SetSize(100,32)
+DAN.ElvUI_ToTargetFrame:Show()
 
 local inversePositions = {
 	["BOTTOM"] = "TOP",
@@ -138,7 +142,20 @@ function DAN:GetFontPath(fontName)
 	local fontPath = LSM:Fetch("font", fontName) or "Fonts\\FRIZQT__.TTF"
 	return fontPath
 end
-
+function DAN:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag)
+	-- isPlayerEvent = pguid == whoguid
+	-- isPetEvent = bit.band(whoflag, BITMASK_PETS) > 0 and bit.band(whoflag, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0
+	-- playerToUnitEvent = isPlayerEvent and tguid ~= pguid
+	-- unitToPlayerEvent = not isPlayerEvent and tguid == pguid
+	if playerToUnitEvent then
+		return NP:SearchForFrame(tguid,_,tname) or (isTargetEvent and self.ElvUI_ToTargetFrame)
+	elseif unitToPlayerEvent then
+		return self.ElvUI_ToPlayerFrame
+	elseif isPetEvent then
+		return NP:SearchForFrame(tguid,_,tname) or (isTargetEvent and self.ElvUI_ToTargetFrame)
+	end
+	return nil
+end
 local useRandomCoords = true
 
 local fontStringCache = {}
@@ -582,7 +599,7 @@ end
 
 local BITMASK_PETS = COMBATLOG_OBJECT_TYPE_PET + COMBATLOG_OBJECT_TYPE_GUARDIAN
 -- local args1,args2,subevent,whoguid,whoname,whoflag,tguid,tname,tflag,spellid,spellname,spellschool,amount,overHeal_Kill,args15,args16,args17,args18,dmgCrit,args20
-local isPlayerEvent
+
 function DAN:FilterEvent(args1,args2,subevent,whoguid,whoname,whoflag,tguid,tname,tflag,spellid,spellname,spellschool,amount,overHeal_Kill,args15,args16,args17,args18,dmgCrit)
 	if not self.db or not self.db.onorof then return end
 	-- print("rab")
@@ -593,47 +610,52 @@ function DAN:FilterEvent(args1,args2,subevent,whoguid,whoname,whoflag,tguid,tnam
 	-- 	print(k,v)
 	-- end
 	isPlayerEvent = pguid == whoguid
-	if (isPlayerEvent and tguid ~= pguid) or (whoguid ~= pguid and tguid ~= pguid and self.db.showFromAnotherPlayer) then -- player to target or unit to target
+	isTargetEvent = UnitExists("target") and (UnitGUID("target") == tguid)
+	isPetEvent = (bit.band(whoflag, BITMASK_PETS) > 0) and (bit.band(whoflag, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0)
+	playerToUnitEvent = isPlayerEvent and (tguid ~= pguid)
+	unitToPlayerEvent = not isPlayerEvent and (tguid == pguid)
+	unitToUnitEvent = not isPlayerEvent and (tguid ~= pguid)
+	if playerToUnitEvent or (unitToUnitEvent and self.db.showFromAnotherPlayer) then -- player to target or unit to target
 		if dse[subevent] and self.db.playerToTargetDamageText then
-			self:DamageEvent(NP:SearchForFrame(tguid,_,tname), spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)
+			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)
 		elseif subevent == "SWING_DAMAGE" and self.db.playerToTargetDamageText  then
-			self:DamageEvent(NP:SearchForFrame(tguid,_,tname), AutoAttack, spellid, 1, dmgCrit, 6603, whoguid, whoname)
+			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), AutoAttack, spellid, 1, dmgCrit, 6603, whoguid, whoname)
 		elseif mse[subevent] and self.db.playerToTargetDamageText  then
-			self:MissEvent(NP:SearchForFrame(tguid,_,tname), spellname, amount, spellid)
+			self:MissEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellid)
 		elseif  subevent == "SPELL_DISPEL" and self.db.playerToTargetDamageText  then
-			self:DispelEvent(NP:SearchForFrame(tguid,_,tname), spellname, overHeal_Kill, amount)
+			self:DispelEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, overHeal_Kill, amount)
 		elseif hse[subevent] and self.db.playerToTargetHealText  then
-			self:HealEvent(NP:SearchForFrame(tguid,_,tname), spellname, amount, args16, spellid,overHeal_Kill)
+			self:HealEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, args16, spellid,overHeal_Kill)
 		elseif csi[subevent] and self.db.playerToTargetDamageText then
-			self:SpellInterruptEvent(NP:SearchForFrame(tguid,_,tname), spellname,spellid,overHeal_Kill)
+			self:SpellInterruptEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname,spellid,overHeal_Kill)
 		elseif subevent == "SWING_MISSED" and self.db.playerToTargetDamageText then
-			self:MissEvent(NP:SearchForFrame(tguid,_,tname), AutoAttack, AutoAttack , 6603)
+			self:MissEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), AutoAttack, AutoAttack , 6603)
 		end
-	elseif not isPlayerEvent and pguid == tguid then -- unit to player
+	elseif unitToPlayerEvent then
 		if dse[subevent] and self.db.targetToPlayerDamageText then
-			self:DamageEvent(self.ElvUI_PDFrame, spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)
+			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)
 		elseif subevent == "SWING_DAMAGE" and self.db.targetToPlayerDamageText then
-			self:DamageEvent(self.ElvUI_PDFrame, AutoAttack, spellid, 1, dmgCrit, 660, whoguid, whoname)
+			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), AutoAttack, spellid, 1, dmgCrit, 660, whoguid, whoname)
 		elseif mse[subevent] and self.db.targetToPlayerDamageText then
-			self:MissEvent(self.ElvUI_PDFrame, spellname, amount, spellid)
+			self:MissEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellid)
 		elseif  subevent == "SPELL_DISPEL" and self.db.targetToPlayerDamageText then
-			self:DispelEvent(self.ElvUI_PDFrame, spellname, overHeal_Kill, amount)
+			self:DispelEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, overHeal_Kill, amount)
 		elseif hse[subevent] and self.db.targetToPlayerHealText then
-			self:HealEvent(self.ElvUI_PDFrame, spellname, amount, args16, spellid,overHeal_Kill)
+			self:HealEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, args16, spellid,overHeal_Kill)
 		elseif csi[subevent] and self.db.targetToPlayerDamageText then
-			self:SpellInterruptEvent(self.ElvUI_PDFrame, spellname,spellid,overHeal_Kill)
+			self:SpellInterruptEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname,spellid,overHeal_Kill)
 		elseif subevent == "SWING_MISSED" and self.db.targetToPlayerDamageText then
-			self:MissEvent(self.ElvUI_PDFrame, AutoAttack, AutoAttack , 6603)
+			self:MissEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), AutoAttack, AutoAttack , 6603)
 		end
-	elseif bit.band(whoflag, BITMASK_PETS) > 0 and bit.band(whoflag, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0 then -- pet/guard events
+	elseif isPetEvent then
 		if dse[subevent] and self.db.petToTargetDamageText  then
-			self:DamageEvent(NP:SearchForFrame(tguid,_,tname), spellname, amount, "pet", dmgCrit, spellid, isPlayerEvent, whoname)
+			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, "pet", dmgCrit, spellid, isPlayerEvent, whoname)
 		elseif subevent == "SWING_DAMAGE" and self.db.petToTargetDamageText then
-			self:DamageEvent(NP:SearchForFrame(tguid,_,tname), AutoAttackPet, spellid, "pet", dmgCrit, 315235, isPlayerEvent, whoname)
+			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), AutoAttackPet, spellid, "pet", dmgCrit, 315235, isPlayerEvent, whoname)
 		elseif mse[subevent] and self.db.petToTargetDamageText then
-			self:MissEventPet(NP:SearchForFrame(tguid,_,tname), spellname, amount, spellid)
+			self:MissEventPet(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellid)
 		elseif hse[subevent] and self.db.petToTargetHealText then
-			self:HealEvent(NP:SearchForFrame(tguid,_,tname), spellname, amount, args16, spellid,overHeal_Kill)
+			self:HealEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, args16, spellid,overHeal_Kill)
 		end
 	end
 end
@@ -647,6 +669,8 @@ function DAN:PLAYER_ENTERING_WORLD(...)
 		self:FilterEvent(...)
 	end)
 	self.db = E.db.DmgAtNameplates
+	E:CreateMover(self.ElvUI_ToPlayerFrame, "PlayerDMGFrame", L["PlayerDMGFrame"], nil, nil, nil, "ALL", nil, "general");
+	E:CreateMover(self.ElvUI_ToTargetFrame, "TargetDMGFrame", L["TargetDMGFrame"], nil, nil, nil, "ALL", nil, "general");
 end
 
 function DAN:PLAYER_TALENT_UPDATE(event)
@@ -669,8 +693,8 @@ function DAN:OnEnable()
 end
 
 function DAN:Initialize()
-	EP:RegisterPlugin(DAN:GetName(), self.DmgAtNameplatesOptions)
-	DAN.activeSpec = C_Talent.GetSpecInfoCache().activeTalentGroup
+	EP:RegisterPlugin(self:GetName(), self.DmgAtNameplatesOptions)
+	self.activeSpec = C_Talent.GetSpecInfoCache().activeTalentGroup
 	-- self.db = E.db
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_TALENT_UPDATE")

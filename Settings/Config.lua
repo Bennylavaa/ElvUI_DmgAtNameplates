@@ -489,7 +489,7 @@ function DAN:DmgAtNameplatesOptions()
 				name = L["MissTab"],
 				get = function(info)  return E.db.DmgAtNameplates.miss[info[#info]] end,
 				set = function(info, value)
-					E.db.DmgAtNameplates.dispel[info[#info]] = value
+					E.db.DmgAtNameplates.miss[info[#info]] = value
 				end,
 				args = tableForAllEvents("miss");
 			},
@@ -499,7 +499,7 @@ function DAN:DmgAtNameplatesOptions()
 				name = L["InterruptTab"],
 				get = function(info)  return E.db.DmgAtNameplates.interrupt[info[#info]] end,
 				set = function(info, value)
-					E.db.DmgAtNameplates.dispel[info[#info]] = value
+					E.db.DmgAtNameplates.interrupt[info[#info]] = value
 				end,
 				args = tableForAllEvents("interrupt");
 			},
