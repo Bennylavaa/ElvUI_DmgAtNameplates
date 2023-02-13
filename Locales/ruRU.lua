@@ -5,6 +5,16 @@ if not L then return end
 -------------- text desc
 L["Reflected"] = "Отражено"
 L["Resisted"] = "Резист"
+
+L["Absorb"] = "Поглощено"
+L["Block"] = "Блок"
+L["Deflect"] = "Отражение"
+L["Dodge"] = "Уворот"
+L["Evade"] = "Избегание"
+L["Immune"] = "Иммунтитет"
+L["Miss"] = "Промах"
+L["Parry"] = "Паррирование"
+
 ------------- options desc
 L["common"] = "Общие"
 L["commondesc"] = "Общие настройки"

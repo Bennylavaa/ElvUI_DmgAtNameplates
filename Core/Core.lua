@@ -83,14 +83,14 @@ local DAMAGE_TYPE_COLORS = {
 	["pet"] = "CC8400"
 }
 local MISS_EVENT_STRINGS = {
-	["ABSORB"] = ACTION_SPELL_MISSED_ABSORB,
-	["BLOCK"] = ACTION_SPELL_MISSED_BLOCK,
-	["DEFLECT"] = ACTION_SPELL_MISSED_DEFLECT,
-	["DODGE"] = ACTION_SPELL_MISSED_DODGE,
-	["EVADE"] = ACTION_SPELL_MISSED_EVADE,
-	["IMMUNE"] = ACTION_SPELL_MISSED_IMMUN,
-	["MISS"] = ACTION_SPELL_MISSED_MISS,
-	["PARRY"] = ACTION_SPELL_MISSED_PARRY,
+	["ABSORB"] = L["Absorb"],
+	["BLOCK"] = L["Block"],
+	["DEFLECT"] = L["Deflect"],
+	["DODGE"] = L["Dodge"],
+	["EVADE"] = L["Evade"],
+	["IMMUNE"] = L["Immune"],
+	["MISS"] = L["Miss"],
+	["PARRY"] = L["Parry"],
 	["REFLECT"] = L["Reflected"],
 	["RESIST"] = L["Resisted"]
 }
