@@ -669,8 +669,8 @@ function DAN:PLAYER_ENTERING_WORLD(...)
 		self:FilterEvent(...)
 	end)
 	self.db = E.db.DmgAtNameplates
-	E:CreateMover(self.ElvUI_ToPlayerFrame, "PlayerDMGFrame", L["PlayerDMGFrame"], nil, nil, nil, "ALL", nil, "general");
-	E:CreateMover(self.ElvUI_ToTargetFrame, "TargetDMGFrame", L["TargetDMGFrame"], nil, nil, nil, "ALL", nil, "general");
+	E:CreateMover(self.ElvUI_ToPlayerFrame, "PlayerDMGFrame", L["PlayerDMGFrame"], nil, nil, nil, "ALL", nil, "DmgAtNameplates");
+	E:CreateMover(self.ElvUI_ToTargetFrame, "TargetDMGFrame", L["TargetDMGFrame"], nil, nil, nil, "ALL", nil, "DmgAtNameplates");
 end
 
 function DAN:PLAYER_TALENT_UPDATE(event)
