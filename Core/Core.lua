@@ -43,6 +43,7 @@ local isPetEvent
 local unitToUnitEvent
 local playerToUnitEvent
 local unitToPlayerEvent
+local playerToPlayerEvent
 DAN.DmgTextFrame = CreateFrame("Frame", nil, UIParent)
 -------------------------------------------------player events frame
 DAN.ElvUI_ToPlayerFrame = CreateFrame("Frame","ElvUI_ToPlayerFrame", UIParent)
@@ -153,6 +154,8 @@ function DAN:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag)
 		return self.ElvUI_ToPlayerFrame
 	elseif isPetEvent then
 		return NP:SearchForFrame(tguid,_,tname) or (isTargetEvent and self.ElvUI_ToTargetFrame)
+	elseif playerToPlayerEvent then
+		return self.ElvUI_ToPlayerFrame
 	end
 	return nil
 end
@@ -505,6 +508,7 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, whog, whoN
 end
 
 function DAN:HealEvent(f, spllname, slldmg, healcrt, splld, vrhll)
+	-- print(f, spllname, slldmg, healcrt, splld, vrhll)
 	if not f then return end
 
 	----------------------- animation
@@ -614,6 +618,7 @@ function DAN:FilterEvent(args1,args2,subevent,whoguid,whoname,whoflag,tguid,tnam
 	playerToUnitEvent = isPlayerEvent and (tguid ~= pguid)
 	unitToPlayerEvent = not isPlayerEvent and (tguid == pguid)
 	unitToUnitEvent = not isPlayerEvent and (tguid ~= pguid)
+	playerToPlayerEvent = isPlayerEvent and (tguid == pguid)
 	if playerToUnitEvent or (unitToUnitEvent and self.db.showFromAnotherPlayer) then -- player to target or unit to target
 		if dse[subevent] and self.db.playerToTargetDamageText then
 			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)
@@ -623,14 +628,14 @@ function DAN:FilterEvent(args1,args2,subevent,whoguid,whoname,whoflag,tguid,tnam
 			self:MissEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellid)
 		elseif  subevent == "SPELL_DISPEL" and self.db.playerToTargetDamageText  then
 			self:DispelEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, overHeal_Kill, amount)
-		elseif hse[subevent] and self.db.playerToTargetHealText  then
+		elseif hse[subevent] and self.db.playerToTargetHealText then
 			self:HealEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, args16, spellid,overHeal_Kill)
 		elseif csi[subevent] and self.db.playerToTargetDamageText then
 			self:SpellInterruptEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname,spellid,overHeal_Kill)
 		elseif subevent == "SWING_MISSED" and self.db.playerToTargetDamageText then
 			self:MissEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), AutoAttack, AutoAttack , 6603)
 		end
-	elseif unitToPlayerEvent then
+	elseif unitToPlayerEvent or isPlayerEvent then
 		if dse[subevent] and self.db.targetToPlayerDamageText then
 			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)
 		elseif subevent == "SWING_DAMAGE" and self.db.targetToPlayerDamageText then
