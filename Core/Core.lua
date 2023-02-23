@@ -461,7 +461,7 @@ function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, whog, whoN
 	elseif targetUnitType == "PlayerFriend" or targetUnitType == "NPCFriend" then
 		if not self.db.showDmgToFriend then return end
 	end
-  	local autoattack = spellName == AutoAttack or spellName == AutoShot or spellName == "pet"
+	local autoattack = spellName == AutoAttack or spellName == AutoShot or spellName == "pet"
 	if (autoattack and crit) then
 		animation = self.db.autoAttackPlusCritAnimation or "verticalUp"
 		pow = true
