@@ -302,79 +302,63 @@ function DAN:DmgAtNameplatesOptions()
 						type = "toggle",
 						name = L["playerToTargetDamageText"],
 						desc = L["pttdtdesc"],
-						get = function(info) return E.db.DmgAtNameplates.playerToTargetDamageText end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.playerToTargetDamageText = value
-						end
-					},
-					targetToPlayerDamageText = {
-						order = 3,
-						type = "toggle",
-						name = L["targetToPlayerDamageText"],
-						desc = L["ttpdtdesc"],
-						get = function(info) return E.db.DmgAtNameplates.targetToPlayerDamageText end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.targetToPlayerDamageText = value
-						end
 					},
 					petToTargetDamageText = {
-						order = 4,
+						order = 3,
 						type = "toggle",
 						name = L["petToTargetDamageText"],
 						desc = L["petttdtdesc"],
-						get = function(info) return E.db.DmgAtNameplates.petToTargetDamageText end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.petToTargetDamageText = value
-						end
+					},
+					targetToPlayerDamageText = {
+						order = 4,
+						type = "toggle",
+						name = L["targetToPlayerDamageText"],
+						desc = L["ttpdtdesc"],
+					},
+					showDmgToFriend = {
+						order = 5,
+						type = "toggle",
+						name = L["showDmgToFriend"],
+						desc = L["showDmgToFriend"],
+					},
+					showDmgToEnemy = {
+						order = 6,
+						type = "toggle",
+						name = L["showDmgToEnemy"],
+						desc = L["showDmgToEnemy"],
 					},
 					header2 = {
-						order = 5,
+						order = 7,
 						type = "header",
 						name = L["AnimationDmg"]
 					},
 					autoAttackPlusCritAnimation = {
-						order = 6,
+						order = 8,
 						type = "select",
 						name = L["autoAttackPlusCritAnimation"],
 						desc = L["autoAttackPlusCritAnimation"],
 						values = animationValues,
-						get = function(info) return E.db.DmgAtNameplates.autoAttackPlusCritAnimation end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.autoAttackPlusCritAnimation = value
-						end
 					},
 					autoAttack = {
-						order = 7,
+						order = 9,
 						type = "select",
 						name = L["autoAttack"],
 						desc = L["autoAttack"],
 						values = animationValues,
-						get = function(info) return E.db.DmgAtNameplates.autoAttack end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.autoAttack = value
-						end
 					},
-					crt = {
-						order = 8,
+					critAnimation = {
+						order = 10,
 						type = "select",
-						name = L["crшt"],
-						desc = L["crшt"],
+						name = L["crit"],
+						desc = L["crit"],
 						values = animationValues,
-						get = function(info) return E.db.DmgAtNameplates.critAnimation end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.critAnimation = value
-						end
 					},
 					commonDMGAnimation = {
-						order = 9,
+						order = 11,
 						type = "select",
 						name = L["commonDMGAnimation"],
 						desc = L["commonDMGAnimation"],
 						values = animationValues,
-						get = function(info) return E.db.DmgAtNameplates.commonDMGAnimation end,
-						set = function(info, value)
-							E.db.DmgAtNameplates.commonDMGAnimation = value
-						end
 					},
 				},
 			},
@@ -440,8 +424,8 @@ function DAN:DmgAtNameplatesOptions()
 					healCrit = {
 						order = 7,
 						type = "select",
-						name = L["crшt"],
-						desc = L["crшt"],
+						name = L["crit"],
+						desc = L["crit"],
 						values = animationValues,
 						get = function(info) return E.db.DmgAtNameplates.healCrit end,
 						set = function(info, value)

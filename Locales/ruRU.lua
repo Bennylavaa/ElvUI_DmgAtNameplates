@@ -46,7 +46,7 @@ L["SmallHitsHidedesc"] = "Тут может быть ваша реклама"
 L["AnimationDmg"] = "Анимации урона"
 L["autoAttackPlusCritAnimation"] = "АА + крит"
 L["autoAttack"] = "АА"
-L["crшt"] = "Крит"
+L["crit"] = "Крит"
 L["commonDMGAnimation"] = "Обычный урон"
 ------------------- animating heal
 L["noHealCrit"] = "Обычное исцеление"
@@ -73,6 +73,8 @@ L["ptthtdesc"] = "Исцеление ОТ персонажа"
 ----------------target to player dmg
 L["targetToPlayerDamageText"] = "Урон В персонажа"
 L["ttpdtdesc"] = "Урон В персонажа"
+L["showDmgToFriend"] = "Показывать урон в Дружественные юниты"
+L["showDmgToEnemy"] = "Показывать урон во Враждебные юниты"
 ----------------target to player heal
 L["targetToPlayerHealText"] = "Исцеление В персонажа"
 L["ttphtdesc"] = "Исцеление В персонажа"

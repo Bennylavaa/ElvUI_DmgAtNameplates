@@ -14,6 +14,7 @@ local next, select, pairs, ipairs = next, select, pairs, ipairs
 local tinsert, tremove = table.insert, table.remove
 local UnitExists = UnitExists
 local UnitGUID = UnitGUID
+local band = bit.band
 
 local SMALL_HIT_EXPIRY_WINDOW = 30
 local SMALL_HIT_MULTIPIER = 0.5
@@ -44,8 +45,9 @@ local unitToUnitEvent
 local playerToUnitEvent
 local unitToPlayerEvent
 local playerToPlayerEvent
+local targetUnitType
 DAN.DmgTextFrame = CreateFrame("Frame", nil, UIParent)
--------------------------------------------------player events frame
+
 DAN.ElvUI_ToPlayerFrame = CreateFrame("Frame","ElvUI_ToPlayerFrame", UIParent)
 DAN.ElvUI_ToPlayerFrame:SetPoint("CENTER",UIParent,"CENTER",300,0)
 DAN.ElvUI_ToPlayerFrame:SetSize(300,32)
@@ -95,6 +97,22 @@ local MISS_EVENT_STRINGS = {
 	["REFLECT"] = L["Reflected"],
 	["RESIST"] = L["Resisted"]
 }
+
+local sReturn
+function DAN:GetUnitTypeByFlag(flag)
+	sReturn = ""
+	if band(flag, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
+		sReturn = "Player"
+	elseif band (flag, COMBATLOG_OBJECT_TYPE_NPC) > 0 then
+		sReturn = "NPC"
+	end
+	if band(flag, COMBATLOG_OBJECT_REACTION_FRIENDLY) > 0 then
+		sReturn = sReturn.."Friend"
+	elseif (band(flag, COMBATLOG_OBJECT_REACTION_HOSTILE) > 0) or (band(flag, COMBATLOG_OBJECT_REACTION_NEUTRAL) > 0) then
+		sReturn = sReturn.."Enemy"
+	end
+	return sReturn
+end
 
 function DAN:rgbToHex(r, g, b)
 	return format("%02x%02x%02x", mtfl(255 * r), mtfl(255 * g), mtfl(255 * b))
@@ -438,6 +456,11 @@ local text, animation, pow, size, alpha, color
 function DAN:DamageEvent(f, spellName, amount, school, crit, spellId, whog, whoName)
 	if not f then return end
 
+	if targetUnitType == "PlayerEnemy" or targetUnitType == "NPCEnemy" then
+		if not self.db.showDmgToEnemy then return end
+	elseif targetUnitType == "PlayerFriend" or targetUnitType == "NPCFriend" then
+		if not self.db.showDmgToFriend then return end
+	end
   	local autoattack = spellName == AutoAttack or spellName == AutoShot or spellName == "pet"
 	if (autoattack and crit) then
 		animation = self.db.autoAttackPlusCritAnimation or "verticalUp"
@@ -612,13 +635,15 @@ function DAN:FilterEvent(args1,args2,subevent,whoguid,whoname,whoflag,tguid,tnam
 	-- for k,v in pairs(args) do
 	-- 	print(k,v)
 	-- end
-	isPlayerEvent = pguid == whoguid
-	isTargetEvent = UnitExists("target") and (UnitGUID("target") == tguid)
-	isPetEvent = (bit.band(whoflag, BITMASK_PETS) > 0) and (bit.band(whoflag, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0)
-	playerToUnitEvent = isPlayerEvent and (tguid ~= pguid)
-	unitToPlayerEvent = not isPlayerEvent and (tguid == pguid)
-	unitToUnitEvent = not isPlayerEvent and (tguid ~= pguid)
-	playerToPlayerEvent = isPlayerEvent and (tguid == pguid)
+	isPlayerEvent = pguid == whoguid;
+	isTargetEvent = UnitExists("target") and (UnitGUID("target") == tguid);
+	isPetEvent = (bit.band(whoflag, BITMASK_PETS) > 0) and (bit.band(whoflag, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0);
+	playerToUnitEvent = isPlayerEvent and (tguid ~= pguid);
+	unitToPlayerEvent = not isPlayerEvent and (tguid == pguid);
+	unitToUnitEvent = not isPlayerEvent and (tguid ~= pguid);
+	playerToPlayerEvent = isPlayerEvent and (tguid == pguid);
+	targetUnitType = self:GetUnitTypeByFlag(tflag);
+
 	if playerToUnitEvent or (unitToUnitEvent and self.db.showFromAnotherPlayer) then -- player to target or unit to target
 		if dse[subevent] and self.db.playerToTargetDamageText then
 			self:DamageEvent(self:GetFrame(whoguid,whoname,whoflag,tguid,tname,tflag), spellname, amount, spellschool, dmgCrit, spellid, whoguid, whoname)

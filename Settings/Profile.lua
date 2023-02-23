@@ -30,6 +30,10 @@ P.DmgAtNameplates = {
     playerToTargetDamageText = false,
     targetToPlayerDamageText = false,
     petToTargetDamageText = false,
+
+    showDmgToFriend = false,
+    showDmgToEnemy = false,
+
     autoAttackPlusCritAnimation = "verticalUp",
     autoAttack = "verticalUp",
     critAnimation = "verticalUp",
@@ -41,6 +45,7 @@ P.DmgAtNameplates = {
     healCrit = "verticalUp",
     noHealCrit = "verticalUp",
     healColor = "0fff00",
+
     showFromAnotherPlayer = false,
     dispel = ReturnFontTable(),
     miss = ReturnFontTable(),
