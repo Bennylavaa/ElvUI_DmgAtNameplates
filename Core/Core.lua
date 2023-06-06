@@ -581,7 +581,9 @@ function DAN:MissEvent(f, spellName, missType, spellId)
 	size = self.db.miss.fontSize or 20
 	alpha = 1
 	pow = true
-	------------- text
+	if missType == "ABSORB" then
+		return
+	end
 	text = MISS_EVENT_STRINGS[missType] or ACTION_SPELL_MISSED_MISS
 	text = "|cff" .. color .. text .. "|r"
 
@@ -595,6 +597,9 @@ function DAN:MissEventPet(f, spellName, missType, spellId)
 	size = self.db.miss.fontSize or 20
 	alpha = 1
 	pow = true
+	if missType == "ABSORB" then
+		return
+	end
 	text = MISS_EVENT_STRINGS[missType] or ACTION_SPELL_MISSED_MISS
 	text = "|cff" .. color .."Питомец ".. text .. "|r"
 	self:DisplayText(f, text, size, alpha, animation, spellId, pow, spellName,"miss")
@@ -722,7 +727,7 @@ function DAN:OnEnable()
 end
 
 function DAN:Initialize()
-	EP:RegisterPlugin(self:GetName(), self.DmgAtNameplatesOptions)
+	EP:RegisterPlugin(DAN.AddOnName, self.DmgAtNameplatesOptions)
 	self.activeSpec = C_Talent.GetSpecInfoCache().activeTalentGroup
 	-- self.db = E.db
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
