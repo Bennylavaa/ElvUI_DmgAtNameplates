@@ -728,7 +728,7 @@ end
 
 function DAN:Initialize()
 	EP:RegisterPlugin(DAN.AddOnName, self.DmgAtNameplatesOptions)
-	self.activeSpec = C_Talent.GetSpecInfoCache().activeTalentGroup
+	self.activeSpec = C_Talent.GetSpecInfoCache() and C_Talent.GetSpecInfoCache().activeTalentGroup or 1
 	-- self.db = E.db
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_TALENT_UPDATE")
