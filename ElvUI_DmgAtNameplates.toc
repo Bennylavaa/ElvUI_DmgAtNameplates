@@ -6,7 +6,7 @@
 ## Notes-ruRU: Показывает цифорки красивые на неймплейтах
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
-## X-Sirus-Update: https://github.com/fxpw/ElvUI_DmgAtNameplates
+## X-Sirus-Update: https://github.com/fxpw/ElvUI_DmgAtNameplates/tree/master
 
 Init.lua
 Libs\Libs.xml
