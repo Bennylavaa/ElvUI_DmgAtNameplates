@@ -550,11 +550,11 @@ function DAN:HealEvent(f, spllname, slldmg, healcrt, splld, vrhll)
 	------------- text
 	if self.db.showOverHeal and slldmg == vrhll then
 		if self.db.textFormat == "kkk" then
-			text = format("Перелечено: %.1fk", vrhll / 1000)
+			text = format("Overheal: %.1fk", vrhll / 1000)
 		elseif self.db.textFormat == "csep" then
-			text = "Перелечено: "..self:CSEP(vrhll)
+			text = "Overheal: "..self:CSEP(vrhll)
 		elseif self.db.textFormat == "none" then
-			text = "Перелечено: "..vrhll
+			text = "Overheal: "..vrhll
 		end
 	elseif not self.db.showOverHeal and slldmg == vrhll then
 		return
@@ -601,7 +601,7 @@ function DAN:MissEventPet(f, spellName, missType, spellId)
 		return
 	end
 	text = MISS_EVENT_STRINGS[missType] or ACTION_SPELL_MISSED_MISS
-	text = "|cff" .. color .."Питомец ".. text .. "|r"
+	text = "|cff" .. color .."Pet ".. text .. "|r"
 	self:DisplayText(f, text, size, alpha, animation, spellId, pow, spellName,"miss")
 end
 
@@ -623,7 +623,7 @@ function DAN:SpellInterruptEvent(f,  spllname, splld, intrspll)
 	size = self.db.interrupt.fontSize or 20
 	alpha = 1
 	pow = true
-	text = "Прервано ".."{"..intrspll.."}"
+	text = "Interrupted ".."{"..intrspll.."}"
 	text = "|cff" .. color .. text .. "|r"
 	self:DisplayText(f, text, size, alpha, animation, splld, pow, spllname,"interrupt")
 end
@@ -708,9 +708,9 @@ function DAN:PLAYER_ENTERING_WORLD(...)
 end
 
 function DAN:PLAYER_TALENT_UPDATE(event)
-	if self.activeSpec ~= C_Talent.GetSpecInfoCache().activeTalentGroup then
+	if self.activeSpec ~= GetNumTalentTabs() then
 		self.db = E.db.DmgAtNameplates
-		self.activeSpec = C_Talent.GetSpecInfoCache().activeTalentGroup
+		self.activeSpec = GetNumTalentTabs()
 	end
 end
 
@@ -728,7 +728,7 @@ end
 
 function DAN:Initialize()
 	EP:RegisterPlugin(DAN.AddOnName, self.DmgAtNameplatesOptions)
-	self.activeSpec = C_Talent.GetSpecInfoCache() and C_Talent.GetSpecInfoCache().activeTalentGroup or 1
+	self.activeSpec = GetNumTalentTabs() or 1
 	-- self.db = E.db
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_TALENT_UPDATE")

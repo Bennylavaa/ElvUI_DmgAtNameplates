@@ -61,7 +61,7 @@ function DAN:DmgAtNameplatesOptions()
 		order = 55,
 		type = "group",
 		childGroups = "tab",
-		name = string.format("|cff00FF00%s|r", "Всплывающий урон"),
+		name = string.format("|cff00FF00%s|r", "DmgAtNameplates"),
 		args = {
 			common = {
 				order = 1,

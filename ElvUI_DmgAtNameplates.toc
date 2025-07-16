@@ -2,11 +2,10 @@
 ## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1D|r|cffe5e3e3mg|r |cff1784d1A|r|cffe5e3e3t|r |cff1784d1N|r|cffe5e3e3ameplates|r
 ## Author: fxpw
 ## Version: 1.15
-## Notes: Show combat text at nameplates
+## Notes: Advanced floating combat text for ElvUI nameplates and frames
 ## Notes-ruRU: Показывает цифорки красивые на неймплейтах
 ## RequiredDeps: ElvUI
 ## DefaultState: Enabled
-## X-Sirus-Update: https://github.com/fxpw/ElvUI_DmgAtNameplates/tree/master
 
 Init.lua
 Libs\Libs.xml
