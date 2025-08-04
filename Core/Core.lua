@@ -587,7 +587,7 @@ function DAN:MissEvent(f, spellName, missType, spellId)
 	text = MISS_EVENT_STRINGS[missType] or ACTION_SPELL_MISSED_MISS
 	text = "|cff" .. color .. text .. "|r"
 
-	self:DisplayText(f, text, size, alpha, animation, spellId, pow, spellName, "dispel")
+	self:DisplayText(f, text, size, alpha, animation, spellId, pow, spellName, "miss")
 end
 
 function DAN:MissEventPet(f, spellName, missType, spellId)
